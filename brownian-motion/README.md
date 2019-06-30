@@ -7,7 +7,7 @@ First let's make the objects before we simulate their trajectories. Open a new B
 
 ![Default](images/brownian_1.png)
 
-Let's add back in a mesh as our main Brownian particle. In this first example we will only use one. Add an **IcoSphere** and change *Subdivisions > 3*. Let's change the name of the mesh to "Particle". Now let's add some texture to this mesh so that when it rotates it is a bit easier to see. We will use *Modifiers* to do so. Navigate to *Modifiers > Add Subdivision Surface* and add this. Add a second modifier as *Modifier > Displace*, follwer by another *Subdivision Surface* (order is important here). The *Displace* modifier should automatically add a Texture (named "Texture") -- which defines how the mesh will change and gives some "bumpiness". Switch to *Textures* and switch to Voronoi, reduce Intensity to around 0.4. Now we have a bumpy-looking sphere. 
+Let's add back in a mesh as our main Brownian particle. In this first example we will only use one. Add via *Add > Mesh > IcoSphere* and change *Subdivisions > 3*. Let's change the name of the mesh to "Particle". Now let's add some texture to this mesh so that when it rotates it is a bit easier to see. We will use *Modifiers* to do so. Navigate to *Modifiers > Add Subdivision Surface* and add this. Add a second modifier as *Modifier > Displace*, follwer by another *Subdivision Surface* (order is important here). The *Displace* modifier should automatically add a Texture (named "Texture") -- which defines how the mesh will change and gives some "bumpiness". Switch to *Textures* and switch to Voronoi, reduce Intensity to around 0.4. Now we have a bumpy-looking sphere. 
 ![Bumpy Sphere - Texture](images/brownian_2.png)
 
 ![Bumpy Sphere - Modifiers](images/brownian_3.png)
@@ -17,7 +17,8 @@ Let's add a Material. Navigate to *Materials* and add a Principled Shader. We wi
 
 ![Sphere - Material](images/brownian_4.png)
 
-To round out the simple scene we'll add a floor and a light. For the floor, *Add > Mesh > Plane*, scaled by 15 and shifted down in the Z-direction by -1. We then add a simple Material which is meant to look kinda of like a matte gold finish.
+To round out the simple scene we'll add a floor and a light. For the floor, *Add > Mesh > Plane*, scaled by 15 and shifted down in the Z-direction by -1. We then add a simple Material which is meant to look somewhat like a matte gold finish.
+
 For the some lights, we add a cylinder and scale by 15. Set the Material to *Emission* with *Strength = 1.0*.
 ![Full Scene](images/brownian_5.png)
 
@@ -25,13 +26,13 @@ For the some lights, we add a cylinder and scale by 15. Set the Material to *Emi
 
 ![Floor Material](images/brownian_6.png)
 
-One of the things with physics simulations is that they often represent things which humans have never seen directly - and are instead models. This means that there is plenty of creative control with the scene, so materials, geometry, and texture are largely up to you. This is not meant to be a photo-realistic image. Plus this tutorial is more about the scripting. Taking a quick look, our particle is a bumpy, metallic-looking ball of sorts -- now let's making it move.
+One of the things with physics simulations is that they often represent something which cannot been seen directly - so there is plenty of creative control with the scene, materials, geometry, and texture (i.e. this is not meant to be a photo-realistic image, and this tutorial is more about the scripting). Rendering a single image, our particle is a bumpy, metallic-looking ball of sorts.
 ![Render Test](images/brownian_7.png)
 
 So now our scene is set, lets get to the scripting and making our objects move.
 
 ### Simulating our trajectories
-The reason Blender is great for science visualizations is that it uses Python as a scripting language, which as quickly become a de-facto standard in many fields. The Blender scripting is done with the `bpy` library, and allows for creating and manipulating objects, animations, etc. Everything we did above to create the scene could be done witht the Python library. Switching to the *Scripting* tab, we can open the *.py* script to run.
+The reason Blender is great for science visualizations is that it uses Python as a scripting language, which has quickly become a de-facto standard in many fields. The Blender scripting is done with the `bpy` library, and allows for creating and manipulating objects, animations, etc. Everything we did above to create the scene could be done with the Blender Python library - but for simplicity we use the GIU. Switching to the *Scripting* tab, we can open the *.py* script to run.
 
 First we import our libraries.
 
@@ -41,9 +42,9 @@ import mathutils as mu
 import numpy as np
 ```
 
-The library `mathutils` provides access to certain math objects used by `bpy`, including `Vectors()`, `Matrix()`, `Quaterions()`, and more. `numpy`, as the standard for numeric computing in Python, is used for the random sampling.
+The library `mathutils` provides access to certain math objects used by `bpy`, including `Vector()`, `Matrix()`, `Quaterion()`, and more. `numpy`, as the standard for numeric computing in Python, is used for the random sampling.
 
-We will simulate a very simple motion, where the particle translates its location by a random amount drawn from a normal distribution. The distribution could correspond to thermodynamic properties, but for now we will treat it as a dimensionless value that looks good in the simulation. We also rotate around the global X, Y, and Z axis by a random angle, also drawn from a normal distribution. We define some parameters to the simulation
+We will simulate a very simple motion, where the particle translates its location by a random amount - drawn from a normal distribution. The distribution could correspond to thermodynamic properties, but for now we will treat it as a dimensionless value, which looks good in the simulation. We also rotate around the global X, Y, and Z axis by a random angle, also drawn from a normal distribution. We define some parameters for the simulation:
 
 ```
 NUM_FRAMES          = 250 # the total number of frames to animate for
@@ -110,3 +111,8 @@ for frame in range(scene.frame_start, scene.frame_end+1, SKIP_FRAMES):
 To run the script navigate to *Text > Run Script*. And voila, we should have the particle moving. Play back the animation to ensure everything worked properly and then setup the render settings (note that the particle could go out of the field-of-view depending on the motion). In *Render*, set the settings you desire and from the drop-down menu start *Render Animation*. This is the long part as the computer renders each frame - so sit back and find a book to read. Once the render is finished, each frame should be exported as an image which can then be stitched together to create the animation (see [Rendering Animations](https://docs.blender.org/manual/en/latest/render/workflows/animations.html) for more information).
 
 ![Animated](images/animated_norender.gif)
+
+And the final render!
+
+![Animated Render](images/render.gif)
+
